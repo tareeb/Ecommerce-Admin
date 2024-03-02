@@ -20,7 +20,10 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      afterSignUpUrl="/onboarding"
+      afterSignInUrl="/"
+    >
       <html lang="en">
         <body className={inter.className}>
           <ThemeProvider 

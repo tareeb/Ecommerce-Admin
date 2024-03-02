@@ -19,13 +19,13 @@ model Store {
   name            String
   userId          String
   billboards      Billboard[] @relation("StoreToBillboard")
-  categories      Category[] @relation("StoreToCategory")
-  products        Product[]  @relation("StoreToProduct")
-  sizes           Size[]     @relation("StoreToSize")
+  categories      Category[]  @relation("StoreToCategory")
+  products        Product[]   @relation("StoreToProduct")
+  sizes           Size[]      @relation("StoreToSize")
   colors          Color[]     @relation("StoreToColor")
   orders          Order[]     @relation("StoreToOrder")
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 }
 
 model Billboard {
@@ -82,17 +82,22 @@ model Product {
 }
 
 model Order {
-  id        String    @id @default(uuid())
+  id        String      @id @default(uuid())
+  
   storeId     String    // Foreign Key to Store
   store       Store     @relation("StoreToOrder", fields: [storeId], references: [id])
+
+  userId      String    // Foreign key to User
+  user        User      @relation("UserToOrder" , fields: [userId] , references: [id])
+  
   orderItems OrderItem[] // Relation to OrderItem model
+  
   isPaid     Boolean   @default(false)
-  phone      String    @default("")
-  address    String    @default("")
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
   @@index([storeId])
+  @@index([userId])
 }
 
 // Intermediary for a many-to-many relationship
@@ -143,3 +148,14 @@ model Image {
 
   @@index([productId])
 }
+
+
+
+// Define the data model
+model User {
+  id      String  @id @default(uuid()) // Primary key with a custom string type
+  role    String  // String field for the role of user // seller or buyer 
+
+  orders  Order[]  @relation("UserToOrder")
+}
+
